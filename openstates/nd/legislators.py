@@ -81,7 +81,7 @@ class NDLegislatorScraper(LegislatorScraper):
             
             
             #for person in district.getparent().getnext().xpath(".//a"):
-            #    logger.debug("person %d %s",count, person.attrib,)
+            #    logger.debug("person %s", person.attrib,)
             #    self.scrape_legislator_page(
             ##        term, 
             #        dis,

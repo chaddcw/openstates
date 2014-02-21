@@ -37,7 +37,7 @@ class NDBillScraper(BillScraper):
             ret = []
             while curnode.tag != "table":
                 curnode = curnode.getnext()
-                if curnode.tag != lxml.etree.Comment : # ccw ignore comments
+                if curnode.tag != lxml.etree.Comment : # ignore comments
                     ret.append(curnode)
             ttrows = ret
             descr = page.xpath("//div[@class='section']//p")[-2]
