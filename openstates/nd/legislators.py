@@ -30,12 +30,64 @@ class NDLegislatorScraper(LegislatorScraper):
         page.make_links_absolute(main_url)
         for district in page.xpath("//h2//a[contains(text(), 'District')]"):
             dis = district.text.replace("District ", "")
-            for person in district.getparent().getnext().xpath(".//a"):
-                self.scrape_legislator_page(
-                    term,
-                    dis,
-                    person.attrib['href']
-                )
+            
+            # The outline HTML we are processing looks as follows:
+            # <h2> <a>District 1</a> </h2>
+            # <div class="member-img-list all-members first odd">
+            #    <a> link to website and image </a> 
+            #    <a> person's name </a> 
+            # </div>
+            # <div class="member-img-list all-members even">
+            #    <a> link to website and image </a> 
+            #    <a> person's name </a> 
+            # </div>
+            #  <div class="member-img-list all-members last odd">
+            #    <a> link to website and image </a> 
+            #    <a> person's name </a> 
+            # </div>
+            # 
+            # However, the 'first odd', 'even', 'last odd' part of the
+            # class is not repeated for each district in exactly that way.
+            # Often it is just 'even', 'odd', 'even' where the first
+            # 'even' or 'odd' in a district is the opposite of the last
+            # 'even' or 'odd' in the final person in the previous 
+            # district.
+            
+            #district.getparent() is the <h2> tag
+            
+            #district.getparent().getnext() is the  
+            # <div class="member-img-list all-members first odd"> tag
+            
+            # We need to continue processing so we hit each 
+            # <div class="member-img-list all-members XXX">
+            # in each district.
+            #
+            # the sibling variable below will continue until either 
+            # no class is given in a div tag or all-members is missing 
+            # from the class text.
+            
+            sibling = district.getparent().getnext()
+            while sibling is not None and \
+				'class' in sibling.attrib and \
+				'all-members' in sibling.attrib['class'] :
+
+                for person in sibling.xpath(".//a"):
+                    self.scrape_legislator_page(
+                        term,
+                        dis,
+                        person.attrib['href']
+                    )
+                sibling =  sibling.getnext()
+            
+            
+            #for person in district.getparent().getnext().xpath(".//a"):
+            #    logger.debug("person %d %s",count, person.attrib,)
+            #    self.scrape_legislator_page(
+            ##        term, 
+            #        dis,
+            #        person.attrib['href']
+            ##    )
+            #    count = count +1
 
 
     def scrape_legislator_page(self, term, district, url):

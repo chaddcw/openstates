@@ -10,7 +10,6 @@ import re
 
 base_url = "http://www.legis.nd.gov/assembly/%s-%s/subject-index/major-topic.html"
 
-
 class NDBillScraper(BillScraper):
     """
     Scrapes available legislative information from the website of the North
@@ -37,7 +36,8 @@ class NDBillScraper(BillScraper):
             ret = []
             while curnode.tag != "table":
                 curnode = curnode.getnext()
-                ret.append(curnode)
+                if curnode.tag != lxml.etree.Comment : # ccw ignore comments
+                    ret.append(curnode)
             ttrows = ret
             descr = page.xpath("//div[@class='section']//p")[-2]
 
