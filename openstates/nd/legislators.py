@@ -87,7 +87,6 @@ class NDLegislatorScraper(LegislatorScraper):
             #        dis,
             #        person.attrib['href']
             ##    )
-            #    count = count +1
 
 
     def scrape_legislator_page(self, term, district, url):

@@ -10,6 +10,7 @@ import re
 
 base_url = "http://www.legis.nd.gov/assembly/%s-%s/subject-index/major-topic.html"
 
+
 class NDBillScraper(BillScraper):
     """
     Scrapes available legislative information from the website of the North
